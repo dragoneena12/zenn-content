@@ -3,3 +3,5 @@
 - gqlgenとAuth0でRBACする
 - husky v6ネタ
 - graphql-codegenからコード生成系ネタ
+- progressbar.jsをreact対応させたい
+- totpをgoで実装してみるとか
