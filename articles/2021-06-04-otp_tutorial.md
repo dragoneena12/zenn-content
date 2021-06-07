@@ -1,6 +1,6 @@
 ---
 title: "pquerna/otpを使いGoでワンタイムパスワード認証するチュートリアル"
-emoji: "🗂"
+emoji: "🦆"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Go", "OTP"]
 published: true
