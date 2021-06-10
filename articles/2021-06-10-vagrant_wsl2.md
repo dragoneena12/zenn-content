@@ -18,7 +18,7 @@ WSL2 環境がある前提です。
 
 Windows と WSL2 の両方に同じバージョンの Vagrant をインストールする必要があります。
 
-Windows は普通にインストーラから、WSL2 は Debian の項にある dpkg を下記コマンドでインストールするのがオススメです。
+Windows は普通にインストーラから、WSL2 は Debian の項にある debian package を下記コマンドでインストールするのがオススメです。
 
 ```
 $ dpkg -i vagrant_2.2.16_x86_64.deb
