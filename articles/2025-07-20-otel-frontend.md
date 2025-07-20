@@ -2,8 +2,8 @@
 title: "Opentelemetryでフロントエンドのトレースを取得する"
 emoji: "😽"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["Opentelemetry", "Tracing", "Frontend", "React"]
-published: false
+topics: ["OpenTelemetry", "Tracing", "Frontend", "JavaScript"]
+published: true
 ---
 
 ## はじめに
