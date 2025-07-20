@@ -1,5 +1,5 @@
 ---
-title: "Opentelemetryでフロントエンドのトレースを取得する"
+title: "OpenTelemetryでフロントエンドのトレースを取得する"
 emoji: "🔭"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["OpenTelemetry", "Tracing", "Frontend", "JavaScript"]
@@ -9,7 +9,7 @@ published: true
 ## はじめに
 こんにちは、Lapi（[@dragoneena12](https://github.com/dragoneena12)）です。
 
-趣味で制作しているwebアプリケーションのパフォーマンス改善のため、Opentelemetryでフロントエンドのトレーシングをしてみました。
+趣味で制作しているwebアプリケーションのパフォーマンス改善のため、OpenTelemetryでフロントエンドのトレーシングをしてみました。
 
 あまりOtelを使ったフロントエンドのトレースについての記事がなかったので参考になると幸いです。
 
