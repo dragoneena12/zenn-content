@@ -35,11 +35,6 @@ erDiagram
         TEXT email
     }
     
-    robots {
-        UUID id PK
-        TEXT name
-    }
-    
     tickets {
         UUID id PK
         TEXT title
@@ -48,10 +43,9 @@ erDiagram
     }
     
     users ||--o{ tickets : "assignee (when type=user)"
-    robots ||--o{ tickets : "assignee (when type=robot)"
 ```
 
-ticketsテーブルはassignee_typeが'user'の場合はusersテーブルを、'robot'の場合はrobotsテーブルを、'name'の場合は直接名前を格納します。
+ticketsテーブルはassignee_typeが'user'の場合はusersテーブルを、'name'の場合は直接名前を格納します。
 
 これはいわゆるポリモーフィック関連というパターンで、SQLアンチパターン6章にも取り上げられているとおり基本的にはアンチパターンとされています。このパターンを採用したときにSQLやパフォーマンスがどのようになるかみていきましょう。
 
@@ -68,41 +62,30 @@ EXPLAIN SELECT
     t.assignee_type,
     CASE 
         WHEN t.assignee_type = 'user' THEN u.name
-        WHEN t.assignee_type = 'robot' THEN r.name
         WHEN t.assignee_type = 'name' THEN t.assignee
     END AS assignee_name
 FROM tickets t
 LEFT JOIN users u ON t.assignee_type = 'user' AND t.assignee = u.id::TEXT
-LEFT JOIN robots r ON t.assignee_type = 'robot' AND t.assignee = r.id::TEXT
 WHERE t.id = '00000000-0000-0002-0000-000000012345';
                                                QUERY PLAN                                               
 --------------------------------------------------------------------------------------------------------
- Hash Right Join  (cost=1758.31..3841.63 rows=4 width=112)
+ Hash Right Join  (cost=8.32..2143.57 rows=1 width=112)
    Hash Cond: ((u.id)::text = t.assignee)
    Join Filter: (t.assignee_type = 'user'::text)
-   ->  Seq Scan on users u  (cost=0.00..1636.25 rows=70125 width=48)
-   ->  Hash  (cost=1758.28..1758.28 rows=2 width=144)
-         ->  Hash Right Join  (cost=8.32..1758.28 rows=2 width=144)
-               Hash Cond: ((r.id)::text = t.assignee)
-               Join Filter: (t.assignee_type = 'robot'::text)
-               ->  Seq Scan on robots r  (cost=0.00..1523.52 rows=78752 width=48)
-               ->  Hash  (cost=8.30..8.30 rows=1 width=112)
-                     ->  Index Scan using tickets_pkey on tickets t  (cost=0.29..8.30 rows=1 width=112)
-                           Index Cond: (id = '00000000-0000-0002-0000-000000012345'::uuid)
+   ->  Seq Scan on users u  (cost=0.00..1636.00 rows=100000 width=48)
+   ->  Hash  (cost=8.30..8.30 rows=1 width=80)
+         ->  Index Scan using tickets_pkey on tickets t  (cost=0.29..8.30 rows=1 width=80)
+               Index Cond: (id = '00000000-0000-0002-0000-000000012345'::uuid)
 ```
 
-いろいろな処理が書かれていますが、ここでは以下の2つの部分に着目します。usersテーブルとrobotsテーブルに対し、全件走査（Seq Scan）がかかっていることがわかります。
+いろいろな処理が書かれていますが、ここではusersテーブルに対して全件走査（Seq Scan）がかかっている部分に着目します。
 
 ```sql
    Hash Cond: ((u.id)::text = t.assignee)
    Join Filter: (t.assignee_type = 'user'::text)
-   ->  Seq Scan on users u  (cost=0.00..1636.25 rows=70125 width=48)
-...
-               Hash Cond: ((r.id)::text = t.assignee)
-               Join Filter: (t.assignee_type = 'robot'::text)
-               ->  Seq Scan on robots r  (cost=0.00..1523.52 rows=78752 width=48)
+   ->  Seq Scan on users u  (cost=0.00..1636.00 rows=100000 width=48)
 ```
 
-この2つのテーブルはサイズが大きいため、全件走査はかなりのパフォーマンス低下につながってしまいます。usersテーブルやrobotsテーブルのIDは主キーのため、本来はindexを使った高速な取得が可能なはずです。しかしticketsテーブルのassignee列はTEXT型となっており、usersテーブルやrobotsテーブルのIDを比較するにはまずTEXT型へとキャストする必要があります。このためindexが使えなくなっているのが大きな原因です。
+usersテーブルはサイズが大きいため、全件走査はかなりのパフォーマンス低下につながってしまいます。usersテーブルのIDは主キーのため、本来はindexを使った高速な取得が可能なはずです。しかしticketsテーブルのassignee列はTEXT型となっており、usersテーブルのIDを比較するにはまずTEXT型へとキャストする必要があります。このためindexが使えなくなっているのが大きな原因です。
 
 
