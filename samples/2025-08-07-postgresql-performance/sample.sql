@@ -19,16 +19,12 @@ CREATE TABLE IF NOT EXISTS tickets (
 );
 
 INSERT INTO tickets (id, title, assignee, assignee_type)
-WITH user_ids AS (
-    SELECT id, row_number() OVER (ORDER BY id) AS rn 
-    FROM users
-)
 SELECT 
-    ('00000000-0000-0002-0000-' || lpad(i::text, 12, '0'))::UUID,
+    ('00000000-0000-0001-0000-' || lpad(i::text, 12, '0'))::UUID,
     'Task #' || i,
     CASE 
         WHEN i % 2 = 0 THEN 
-            (SELECT id::TEXT FROM user_ids WHERE rn = ((i / 2) % 100000) + 1)
+            ('00000000-0000-0000-0000-' || lpad(((i / 2) % 100000 + 1)::text, 12, '0'))::TEXT
         ELSE 
             'DirectAssignee' || ((i / 2) % 100000 + 1)
     END AS assignee,
@@ -36,4 +32,4 @@ SELECT
         WHEN i % 2 = 0 THEN 'user'
         ELSE 'name'
     END AS assignee_type
-FROM generate_series(1, 300000) AS i;
+FROM generate_series(1, 200000) AS i;
