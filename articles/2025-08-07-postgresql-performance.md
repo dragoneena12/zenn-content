@@ -1,8 +1,8 @@
 ---
 title: "PostgreSQLの実行計画を読んでパフォーマンスチューニングする - EAVアンチパターン"
-emoji: "🔭"
+emoji: "🔍"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["PostgreSQL"]
+topics: ["PostgreSQL", "SQL"]
 published: false
 publication_name: tokium_dev
 ---
@@ -163,3 +163,11 @@ WHERE t.id = '00000000-0000-0001-0000-000000012345';
 ## まとめ
 
 今回の記事ではEAVパターンとDBパフォーマンスの影響について実際に手元で実行計画を確認しながら調査してみました。EAVアンチパターンが実際のパフォーマンスにどう影響するかまで書かれた記事は少ないと思うので、DB設計をする上で参考にしていただけると嬉しいです。
+
+## 参考文献
+
+https://www.oreilly.co.jp/books/9784814400744/
+
+https://www.postgresql.jp/document/17/html/index.html
+
+https://zenn.dev/manase/articles/7b8af72db3a3ab
