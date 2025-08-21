@@ -169,5 +169,3 @@ WHERE t.id = '00000000-0000-0001-0000-000000012345';
 https://www.oreilly.co.jp/books/9784814400744/
 
 https://www.postgresql.jp/document/17/html/index.html
-
-https://zenn.dev/manase/articles/7b8af72db3a3ab
