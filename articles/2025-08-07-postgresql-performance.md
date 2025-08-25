@@ -3,7 +3,7 @@ title: "PostgreSQLの実行計画を読んでパフォーマンスチューニ�
 emoji: "🔍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["PostgreSQL", "SQL"]
-published: false
+published: true
 publication_name: tokium_dev
 ---
 
